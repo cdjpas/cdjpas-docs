@@ -1,0 +1,52 @@
+%##############################################################################
+%##############################################################################
+% COVER AND COVER SHEET
+%##############################################################################
+%##############################################################################
+
+
+% Insert a bookmark to the cover in the PDF
+\pdfbookmark[1]{Capa}{capa}
+
+% Cover
+\makeatletter
+\begin{titlingpage*}
+    \label{capa}
+
+    % Background picture
+    \ThisCenterWallPaper{1}{figs/20221214_145045_HDR_2.png}
+
+    % Gradient over picture
+    \begin{tikzpicture}[remember picture,overlay]
+        \node [rectangle, fill=black, opacity=0.8, top color=black, middle color=black, bottom color=white!20!black, anchor=north, minimum width=\paperwidth, minimum height=\paperheight] (box) at (current page.north){};
+    \end{tikzpicture}
+
+    % Text
+    \begin{FlushLeft}
+        \color{lightgray}{
+            \noindent\begin{minipage}[h]{0.12\textwidth}
+                \begin{vplace}
+                    \includesvg[width=0.85\textwidth]{figs/logo-ON.svg}
+                \end{vplace}
+            \end{minipage}
+            \begin{minipage}[h]{0.815\textwidth}
+                \begin{vplace}
+                    {\affil}
+                \end{vplace}
+            \end{minipage}
+
+            \vspace{8cm}
+            {\HUGE \color{OliveGreen!60}{\@title}}\\
+
+            \vspace{2cm}
+            {\Large \authorshort}
+
+            \vspace{2cm}
+            {\large Versão: \docversion}
+
+            \vfill
+            \@date
+        }
+    \end{FlushLeft}
+\end{titlingpage*}
+\makeatother

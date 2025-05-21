@@ -1,0 +1,367 @@
+%##############################################################################
+%##############################################################################
+% CONFIGURATION OF THE DOCUMENT
+%##############################################################################
+%##############################################################################
+
+
+%##############################################################################
+%=== LAYOUT ===================================================================
+%##############################################################################
+% Page margins
+% Some tips based on the golden ratio (see https://goo.gl/PpwfYX):
+%   - Top margins are about half of bottom margin
+%   - Outside margins are about 2/3 rds of bottom margin
+%   - Inside margins are about 1/3 rds of bottom margin
+\geometry{
+    paper=a4paper,
+    %bottom=6cm,inner=2cm,top=3cm,outer=4cm,  % With footnote in the text
+    bottom=4.5cm,inner=1.5cm,top=2.25cm,outer=3cm,  % No footnote in the text
+}
+
+% Spacing between lines
+\linespread{1.1}
+
+% Chapter's style
+%\chapterstyle{hangnum}
+% Style of sections, subsections, and subsubsections
+\setsecheadstyle{\Large\bfseries\sffamily\raggedright}
+\setsubsecheadstyle{\large\bfseries\sffamily\raggedright}
+\setsubsubsecheadstyle{\bfseries\sffamily\raggedright}
+% To make sections be numbered 1, 2, ... instead of 0.1, 0.2, ...
+%\counterwithout{section}{chapter}
+
+% Style of pages numbering
+\makepagestyle{myheadings}
+\makeevenhead{myheadings}{% {pagestyle}{left}{center}{right}
+    \sffamily\thepage\hspace{0.5cm}\textbf{\scriptsize\leftmark}\hrule%
+}{}{}
+\makeoddhead{myheadings}{}{}{% {pagestyle}{left}{center}{right}
+    \sffamily\textbf{\scriptsize\rightmark}\hspace{0.5cm}\thepage\hrule%
+}
+%\makeevenfoot{myheadings}{}{}{}  % {pagestyle}{left}{center}{right}
+%\makeoddfoot{myheadings}{}{}{}  % {pagestyle}{left}{center}{right}
+\pagestyle{myheadings}
+
+% Chapters, sections, and subsections are numbered
+\maxsecnumdepth{subsection}
+% Chapters, sections, and subsections are in the Table of Contents
+\maxtocdepth{subsection}
+
+% Reset length names that control space above and below rules in booktabs.
+% See https://tex.stackexchange.com/a/652375.
+\setlength{\aboverulesep}{0pt}
+\setlength{\belowrulesep}{0pt}
+\renewcommand{\arraystretch}{1.5}
+
+% This defines a latex counter to shadow the `\newcount' allocated counter defined by `xcolor'.
+% See https://tex.stackexchange.com/a/297357.
+\newcounter{tblerows}
+\expandafter\let\csname c@tblerows\endcsname\rownum
+
+
+%##############################################################################
+%=== LINKS ====================================================================
+%##############################################################################
+\hypersetup{
+    %pdftitle={\@title - \doctype},
+    %pdfauthor={\authorshort},
+    pdfkeywords={\keywords},
+    breaklinks=true,
+    bookmarksopen=true,
+    bookmarksopenlevel=2,
+    bookmarksnumbered,
+    colorlinks=true,
+    citecolor=MidnightBlue,
+    linkcolor=Maroon,
+    urlcolor=MidnightBlue,
+    pdfpagemode=UseOutlines,
+    pdfstartview={FitH},
+    breaklinks=true,
+    linktocpage=true
+}
+
+
+%##############################################################################
+%=== SOME STYLES ==============================================================
+%##############################################################################
+% Chapter's title
+\titleformat
+	{\chapter}
+	[hang]
+	{\Huge\bfseries\sffamily}
+	{\MakeUppercase{\thechapter}}
+	{20pt}
+	{\huge\sffamily}[\vspace{0.5cm} \titlerule]
+% This changes the spacing "before" the chapter's title (the second lenght
+% argument) to 0.
+\titlespacing*{\chapter}{0pt}{3cm}{1.5cm}
+
+% Turn footnote numbers into symbols
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+% Makes to width of the inserted todonotes to fit inside the available space in
+% the margin. This should be equal to the value of the textwidth option of the
+% todonotes package.
+\setlength{\marginparwidth}{2.5cm}
+
+% Style for versioning based on the date.
+% Based on https://latex.org/forum/viewtopic.php?p=119342#p119342.
+\DTMnewdatestyle{versionbydate}{
+    \renewcommand*\DTMdisplaydate[4]{%
+        \DTMtwodigits{##1}.\DTMtwodigits{##2}.\DTMtwodigits{##3}%
+    }
+    \renewcommand*\DTMDisplaydate{\DTMdisplaydate}
+}
+
+% Save the output of the \today command in the variable \docversion.
+% See https://tex.stackexchange.com/a/435038
+\DTMsetdatestyle{versionbydate}
+\newcommand{\tmpvalue}{\today}
+\edef\docversion{\tmpvalue}
+\DTMsetdatestyle{default}
+
+% Style for paragraph titles (Memoir manual, section 6.6)
+\setparaheadstyle{\sffamily\bfseries}
+
+
+%##############################################################################
+%=== (RE)DEFINITIONS OF SOME COMMANDS OF LaTeX ================================
+%##############################################################################
+\addto\captionsbrazilian{\renewcommand{\contentsname}{\sffamily\textbf{Conteúdo}}}
+
+
+%##############################################################################
+%=== REFERENCES FILES =========================================================
+%##############################################################################
+\addbibresource{src/pre/pre_ref.bib}
+\ExecuteBibliographyOptions{doi=false}
+%\newbibmacro{string+doi}[1]{%
+%    \iffieldundef{doi}{#1}{\href{http://dx.doi.org/\thefield{doi}}{#1}}}
+%\DeclareFieldFormat{title}{\usebibmacro{string+doi}{\mkbibemph{#1}}}
+%\DeclareFieldFormat[article]{title}{\usebibmacro{string+doi}{\mkbibquote{#1}}}
+\DeclareFieldFormat[article]{title}{\textit{\mkbibquote{#1}}}
+\renewbibmacro{in:}{}
+%\AtBeginBibliography{%
+%    \urlstyle{rm}%
+%}
+
+
+%##############################################################################
+%=== MISCELLANEOUS DOCUMENT SPECIFICATIONS ====================================
+%##############################################################################
+% Fewer overfull lines - used in the memoir class and allows a setting somewhere between \fussy and \sloppy
+\midsloppy
+
+% Tell memoir to implement the above
+%\checkandfixthelayout
+
+% Style for quotes
+\newtcolorbox{myquote}{
+    colback=green!3!white,
+    colframe=green!30!white,
+    grow to right by=-5mm,
+    grow to left by=-5mm,
+    boxrule=1pt,
+    boxsep=0pt,
+    breakable
+} \makeatletter
+\renewenvironment{quote}{\begin{myquote}}{\end{myquote}}
+
+% Style for reminders
+\newtcolorbox{reminder}{
+    title=Lembre-se,
+    colback=SkyBlue!30!white,
+    colframe=SkyBlue!70!white,
+    coltitle=SkyBlue!50!black,
+    fonttitle=\sffamily\bfseries,
+    boxrule=1pt,
+    breakable
+} \makeatletter
+
+% Style for tips
+\newtcolorbox{tip}{
+    title=Dica,
+    colback=LimeGreen!10!white,
+    colframe=LimeGreen!40!white,
+    coltitle=LimeGreen!60!black,
+    fonttitle=\sffamily\bfseries,
+    boxrule=1pt,
+    breakable
+} \makeatletter
+
+% Style for warnings
+\newtcolorbox{warning}{
+    title=Aviso,
+    colback=Maroon!10!white,
+    colframe=Maroon!30!white,
+    coltitle=Maroon!90!black!80!white,
+    fonttitle=\sffamily\bfseries,
+    boxrule=1pt,
+    breakable
+} \makeatletter
+
+
+%##############################################################################
+%=== VERBATIM, INLINE CODE AND CODE BLOCKS ====================================
+%##############################################################################
+% --- Colors for code styles --------------------------------------------------
+\definecolor{solarized-light-bg}{HTML}{fef6e4}
+\definecolor{solarized-light-bg-darker}{HTML}{eee6d4}
+\definecolor{terminal-bgcolor}{RGB}{38,50,56}
+\definecolor{terminal-bgcolor-title}{RGB}{48,60,66}
+\definecolor{prompt-exitcode-fg}{HTML}{870000}
+\definecolor{prompt-hostname-bg}{HTML}{afffff}
+\definecolor{prompt-hostname-fg}{HTML}{008787}
+\definecolor{prompt-username-bg}{HTML}{008787}
+\definecolor{prompt-username-fg}{HTML}{eeeeee}
+\definecolor{prompt-condaenv-bg}{HTML}{5faf87}
+\definecolor{prompt-condaenv-fg}{HTML}{eeeeee}
+\definecolor{prompt-time-bg}{HTML}{3a3a3a}
+\definecolor{prompt-time-fg}{HTML}{a8a8a8}
+\definecolor{prompt-git-bg}{HTML}{4e4e4e}
+\definecolor{prompt-git-fg}{HTML}{bcbcbc}
+\definecolor{prompt-workdir-bg}{HTML}{3a3a3a}
+\definecolor{prompt-workdir-fg}{HTML}{00afaf}
+\definecolor{prompt-userprompt-fg}{HTML}{767676}
+
+% --- Standard styles for code blocks -----------------------------------------
+\setminted{
+    linenos,
+    breaklines,
+    fontsize=\small,
+    style=solarized-light,
+    bgcolor=solarized-light-bg,
+    texcl=true,
+    escapeinside=||
+}
+\setmintedinline{
+    breaklines,
+    fontsize=\small,
+    style=solarized-light,
+    bgcolor=SpringGreen!12!white,
+    texcl=true,
+    escapeinside=||
+}
+
+\newtcblisting{code}[2][]{%
+    listing engine=minted,%
+    colback=solarized-light-bg,%
+    colframe=solarized-light-bg,%
+    % colhighlight=solarized-light-bg-darker,%
+    listing only,%
+    minted style=solarized-light,%
+    minted language=#2,%
+    minted options={%
+        autogobble, bgcolor=solarized-light-bg, breaklines, fontsize=\small,%
+        linenos=true, numbersep=3mm, texcl=true, escapeinside=||, #1%
+    },%
+    left=5mm,%
+    enhanced,%
+    overlay={%
+        \begin{tcbclipinterior}
+            \fill[solarized-light-bg!95!black] (frame.south west) rectangle ([xshift=5mm]frame.north west);
+        \end{tcbclipinterior}
+    }%
+}
+% Style of the line numbers
+% From https://tex.stackexchange.com/a/585711
+\renewcommand{\theFancyVerbLine}{\ttfamily
+    \textcolor{gray}{\footnotesize{\arabic{FancyVerbLine}}}}
+
+% --- Terminal style ----------------------------------------------------------
+% From: https://tex.stackexchange.com/a/609103
+\tcbuselibrary{skins, breakable, breakable}
+\tcbuselibrary{minted}
+
+\newtcblisting{terminal}{
+    listing engine=minted,
+    colback=terminal-bgcolor,
+    colframe=terminal-bgcolor,
+    coltext=white,
+    colbacktitle=terminal-bgcolor-title,
+    listing only,
+    minted style=native,
+    minted language=text,
+    minted options={
+        autogobble, bgcolor=terminal-bgcolor, breaklines, fontsize=\small,
+        linenos=false, texcl=true, escapeinside=||
+    },
+    enhanced,
+}
+
+\newtcblisting{cdjpasterminal}{
+    listing engine=minted,
+    colback=terminal-bgcolor,
+    colframe=terminal-bgcolor,
+    coltext=white,
+    colbacktitle=terminal-bgcolor-title,
+    listing only,
+    minted style=native,
+    minted language=text,
+    minted options={
+        autogobble, bgcolor=terminal-bgcolor, breaklines, fontsize=\small,
+        linenos=false, texcl=true, escapeinside=||
+    },
+    enhanced,
+    adjusted title=flush right,
+    halign title=flush right,
+    title=Terminal~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \tikz{
+        % Minimize, restore and maximize buttons based on the Breeze theme
+        % Minimize
+        \coordinate (coordmin1) at (0.15, 0.075);
+        \coordinate (coordmin2) at (0, -0.075);
+        \coordinate (coordmin3) at (-0.15, 0.075);
+        \draw[lightgray] (coordmin1) -- (coordmin2) -- (coordmin3);
+        % Restore
+        \coordinate (coordres1) at (0.35, 0);
+        \coordinate (coordres2) at (0.5, 0.15);
+        \coordinate (coordres3) at (0.65, 0);
+        \coordinate (coordres4) at (0.5, -0.15);
+        \draw[lightgray] (coordres1) -- (coordres2) -- (coordres3)
+                      -- (coordres4) -- (coordres1);
+        % Maximize
+        \coordinate (coordmax1) at (0.85, 0.15);
+        \coordinate (coordmax2) at (1.15, -0.15);
+        \coordinate (coordmax3) at (0.85, -0.15);
+        \coordinate (coordmax4) at (1.15, 0.15);
+        \draw[lightgray] (coordmax1) -- (coordmax2);  % \
+        \draw[lightgray] (coordmax3) -- (coordmax4);  % /
+    }
+}
+
+% --- The Prompt --------------------------------------------------------------
+\newcommand{\PromptExitCode}[1]{%
+    \color{prompt-exitcode-fg}{#1}%
+}
+\newcommand{\PromptHostName}[1]{%
+    \colorbox{prompt-hostname-bg}{\color{prompt-hostname-fg}{#1}}%
+}
+\newcommand{\PromptUserName}[1]{%
+    \colorbox{prompt-username-bg}{\color{prompt-username-fg}{#1}}%
+}
+\newcommand{\PromptCondaEnv}[1]{%
+    \colorbox{prompt-condaenv-bg}{\color{prompt-condaenv-fg}{#1}}%
+}
+\newcommand{\PromptTime}[1]{%
+    \colorbox{prompt-time-bg}{\color{prompt-time-fg}{#1}}%
+}
+\newcommand{\PromptGit}[1]{%
+    \colorbox{prompt-git-bg}{\color{prompt-git-fg}{#1}}%
+}
+\newcommand{\PromptWorkDir}[1]{%
+    \colorbox{prompt-workdir-bg}{\color{prompt-workdir-fg}{#1}}%
+}
+\newcommand{\PromptUserPrompt}[1]{%
+    \color{prompt-userprompt-fg}{#1}%
+}
+\NewDocumentCommand{\prompt}{ommomomm}{%
+    \IfValueT{#1}{\PromptExitCode{\vphantom{cdjpas}\Verb|#1 |}}%
+    \PromptHostName{\vphantom{cdjpas}\Verb| #2 |}%
+    \PromptUserName{\vphantom{cdjpas}\Verb| #3 |}%
+    \IfValueT{#4}{\PromptCondaEnv{\vphantom{cdjpas}\Verb| #4 |}}%
+    \PromptTime{\vphantom{cdjpas}\Verb| #5 |}%
+    \IfValueT{#6}{\PromptGit{\vphantom{cdjpas}\Verb| #6 |}}%
+    \PromptWorkDir{\vphantom{cdjpas}\Verb| #7 |}\\%
+    \noindent\PromptUserPrompt{\vphantom{cdjpas}\Verb|#8|}%
+}

@@ -1,0 +1,138 @@
+\chapter{Visão Geral do CDJPAS}
+\label{chap:visao-geral-do-cdjpas}
+
+\section{O que é o CDJPAS?}
+\label{sec:o-que-e-o-cdjpas}
+% Definição do CDJPAS.
+
+O CDJPAS é um cluster de pequeno/médio porte voltado à computação de alto desempenho (\textit{High Performance Computing - HPC}) e está localizado no Centro de Processamento de Dados do Observatório Nacional (CPDON). Seu uso é destinado ao armazenamento e processamento dos dados gerados pelo projeto J-PAS, bem como aos projetos de pesquisa em astrofísica e cosmologia executados por estudantes de pós-graduação, pós-doutorandos e pesquisadores da COAST.
+
+No presente momento, ele é composto de 1024 núcleos lógicos distribuídos em 8 nós de computação (128 núcleos cada). Esta configuração permite que o CDJPAS seja adequado não só ao uso de tarefas (\jobs) que exigem o trabalho simultâneo de núcleos localizados em diferentes nós da rede, mas também ao uso de tarefas que precisam ser executadas de modo paralelo em um único nó. Para este fim, o cluster utiliza o gerenciador de filas Slurm\footnote{\url{\URLSlurm}} para gerenciar a alocação de recursos e submissão das tarefas que serão executadas em paralelo.
+
+% Texto do parágrafo traduzido de https://docs.hpc.sussex.ac.uk/apollo2/introduction.html
+A Comissão Supervisora das Atividades de TI do ON (CSTI) é a responsável por definir as políticas de uso e acesso ao CDJPAS. Enquanto isso, a Divisão de Tecnologia da Informação do ON (DITIN) é responsável pela configuração, manutenção e desenvolvimento do sistema do CDJPAS, assim como fornece e mantém a infraestrutura geral que hospeda o cluster, a saber: um data center moderno, segurança, eletricidade, refrigeração, espaço em rack, rede e armazenamento, entre outros.
+
+% Texto do parágrafo traduzido de https://docs.hpc.sussex.ac.uk/apollo2/introduction.html
+Cada usuário do CDJPAS recebe um espaço home com backups incrementais noturnos e um espaço para armazenamento compartilhado entre membros de grupos de pesquisa, além de um espaço temporário \textit{scratch} no sistema de arquivos paralelo Quantum \stornext\ 7\footnote{\url{\URLStorNext}} para aplicações de leitura/escrita (I/O) intensivas (este espaço não possui backup). No CDJPAS, o sistema de arquivos \stornext\ possui no momento cerca de 400 TB de armazenamento em discos.
+
+% Texto do parágrafo traduzido de https://www.prl.res.in/prl-eng/hpc/getting_started
+Um cluster HPC não é apenas uma versão mais rápida de um computador pessoal. Antes de utilizar um cluster, você precisa se familiarizar com alguns conceitos que são específicos desta área. O conteúdo restante deste capítulo descreve esses conceitos e tudo o que você precisa saber para executar uma tarefa no CDJPAS.
+
+
+
+\section{Quando eu devo utilizar HPC?}
+\label{sec:quando-eu-devo-utilizar-hpc}
+
+% Texto da seção traduzido de https://www.prl.res.in/prl-eng/hpc/getting_started/should_i_use_hpc
+
+Ao considerar a execução de seus trabalhos em um cluster HPC, é importante compreender que os processadores individuais no cluster não precisam ser, necessariamente, mais rápidos do que as CPUs do seu desktop. Isso significa que alguns usuários não obterão nenhum benefício real pelo esforço de usar um cluster HPC. O ponto forte dos clusters é o número de trabalhos que podem ser executados ao mesmo tempo, a capacidade de executar trabalhos com vários núcleos, a quantidade de memória disponível nos nós de computação e a capacidade de executar trabalhos por um longo tempo.
+
+Para considerar o uso de um cluster HPC, você deve se perguntar se alguma das seguintes situações se aplica a você:
+
+\itmz{
+    \item Suas tarefas exigem mais memória do que a disponível no seu computador?
+    \item Você tem um grande número de tarefas para executar?
+    \item Sua tarefa leva muito tempo (mais do que uma semana) para ser executada?
+    \item Suas tarefas podem ser divididas em partes menores?
+    \item Suas tarefas se beneficiariam se pudessem executar seções de código em paralelo?
+}
+
+Se a resposta a todas essas perguntas for não, então provavelmente HPC não é para você. Você deve continuar executando seus trabalhos da mesma maneira que faz atualmente e considerar usar o cluster quando suas circunstâncias mudarem. Se você respondeu sim a alguma dessas perguntas, leia a seção \ref{sec:solicitacao-de-acesso} para saber como obter uma conta no CDJPAS caso você preencha os pré-requisitos.
+
+
+
+\section{O que é um Cluster HPC?}
+\label{sec:o-que-e-um-cluster-hpc}
+% Definição e importância de um cluster de computação de alto desempenho.
+
+% Texto da seção traduzido de https://www.prl.res.in/prl-eng/hpc/getting_started/what_is_a_cluster
+
+Um cluster é uma coleção de muitos computadores ou nós. Ao fazer login em um cluster, você está, na verdade, acessando o \textit{nó de login} (ou \textit{principal}) do cluster. O nó de login é a face pública do cluster --- é o único dos nós do cluster que está diretamente visível e acessível à rede externa. Os outros nós do cluster, incluindo o nó de armazenamento e todos os nós de computação, comunicam-se com o nó de login e entre si por meio de uma rede privada interna.
+
+O nó de login é compartilhado por todos os usuários do cluster. Ele é utilizado para preparar, enviar e gerenciar tarefas, assim como para transferir arquivos. \textbf{Nunca execute nenhum processo computacionalmente intensivo no nó de login}. As tarefas são enviadas a partir do nó de login, mas na verdade são executadas em um ou mais nós de computação. O procedimento pelo qual as tarefas são alocadas aos nós de computação e gerenciadas durante seu tempo de execução é de responsabilidade do gerenciador de recursos (ou gerenciador de filas). O CDJPAS utiliza um gerenciador de recursos conhecido como Slurm.
+
+As tarefas são enviadas usando um comando de envio de fila. Existem dois tipos de tarefas que podem ser aceitas: tarefas interativas e tarefas em lote. Uma tarefas interativa fornece uma sessão de login em um ou mais nós de computação. Isso permite interagir diretamente (via \textit{shell}) com os nós de computação emitindo qualquer sequência de comandos na sessão de login. Conseqüentemente, as tarefas interativas são úteis para testes e depuração. Por outro lado, uma tarefas em lote é uma tarefa solicitada a partir de um script que é executado do início ao fim sem qualquer intervenção do usuário. A grande maioria das tarefas no cluster são tarefas em lote. Este tipo de tarefas é apropriado para execuções que duram várias horas ou dias.
+
+
+
+\section{Arquitetura do CDJPAS}
+\label{sec:arquitetura-do-cdjpas}
+% Descrição dos componentes principais: nós de computação, nós de login, nós de armazenamento, rede.
+
+\begin{figure}[ht]
+    \scriptsize
+    \centering
+    \includesvg[width=0.8\textwidth]{figs/cdjpas-schema_pt_240821.svg}
+    \caption{\label{fig:arquitetura-cdjpas}Arquitetura física do cluster CDJPAS.}
+\end{figure}
+
+A arquitetura do CDJPAS está ilustrada na figura~\ref{fig:arquitetura-cdjpas}. Do ponto de vista físico, o cluster é composto das seguintes partes:
+
+\itmz{
+    \item \textbf{Nós administrativos:} São compostos de dois servidores Dell PowerEdge R420, cada um possuindo 2 CPUs Intel Xeon E5-2400 com 8 núcleos à 2,10 GHz, 64 GB de RAM e cerca de 54 TB de armazenamento. Eles são responsáveis pelos seguintes nós de gerenciamento:
+    \itmz{
+        \item \textbf{Principal (\textit{head}):} Nó para gerenciamento do cluster como um todo. Disponível apenas aos administradores.
+        \item \textbf{Login (\hostname{cdjpas.on.br}):} A porta de entrada para o usuário no cluster; nó usado para a submissão de tarefas.
+        \begin{warning}
+            Na execução das tarefas, o Slurm irá distribuir a tarefa pelos nós de computação, sempre observando os recursos disponíveis e seguindo as diretrizes relacionadas à fila escolhida para execução da tarefa. Você não irá interagir com os nós diretamente. Você deve evitar executar programas diretamente no nó de login.
+        \end{warning}
+    }
+
+    \item \textbf{Nós de computação:} São os nós onde as tarefas são executadas pelo gerenciador de filas Slurm. Existem 8 nós de computação no presente momento, com hostnames \hostname{compute-[1-8]}. Os nós de computação possuem a configuração de hardware descrita na tabela~\ref{tab:hardware-computacao}.
+
+    \item \textbf{Sistema de armazenamento:}
+    \itmz{
+        \item \textbf{Gerenciamento:} Controla o fluxo de dados entre o sistema de armazenamento e o de processamento. O gerenciamento é executado por um controlador Quantum H4024, que possui uma CPU AMD EPYC 7402P de 24 núcleos à 2,8 GHz, 128 GB de RAM e cerca de 29 TB de armazenamento.
+        \item \textbf{Sistema de SSDs:} Fornece os espaços de armazenamento para os usuários, tanto os individuais localizados em \filename{/home}, quanto os compartilhados entre usuários de um mesmo projeto de pesquisa e que se encontram em \filename{/projects}. É composto por um servidor Quantum QXS-424, com cerca de 50 TB de capacidade útil.
+        \item \textbf{Sistema de discos rígidos:} Fornece espaço de armazenamento temporário (\textit{scratch}) dedicado às análises realizadas pelos usuários do cluster, backups dos dados dos usuários contidos em \filename{/home}, além de servir como armazenamento dos dados do levantamento J-PAS que serão distribuídos pelo ON. Para cumprir esses objetivos, esse sistema é formado por três componentes, a saber: um espaço de 12 TB no mesmo servidor Quantum QXS-424 mencionado no item anterior, um servidor Quantum QXS-456 com capacidade de 192 TB, e um servidor Quantum QXS-484 com capacidade de 191 TB, totalizando 395 TB de capacidade útil em discos rígidos.
+        \item \textbf{Sistema de fitas:} Dedicado exclusivamente ao armazenamento de dados do projeto J-PAS. É composto por um servidor robótico Quantum Si6 contendo 2 drives LTO-8 com 100 slots de fitas ativos e capacidade útil entre 900 TB (para dados sem compressão) e 2,25 PB (para dados com compressão 2,5:1).
+    }
+}
+
+\begin{table}[!t]
+    \begin{threeparttable}[b]
+        \small
+        \centering
+        \caption{\label{tab:hardware-computacao}Configuração de hardware dos nós de computação do cluster CDJPAS.}
+        \begin{tabularx}{\textwidth}{
+            >{\centering\arraybackslash}X
+            >{\raggedright\arraybackslash}X
+            >{\raggedright\arraybackslash}X
+            >{\centering\arraybackslash}X
+            >{\centering\arraybackslash}X
+            >{\centering\arraybackslash}X
+            >{\raggedright\arraybackslash}X
+            }
+            \toprule
+            Quantidade & Modelo & CPU & N{\textdegree} de núcleos\tnote{1} & Cache L3\tnote{1} & Memória RAM & Armazenam. local temporário \\
+            \midrule
+            7 & Dell PE\tnote{2} R7525 & 2x AMD EPYC 7H12 à 2,6 GHz & 64 & 256 MB & 384 GB & 2x SSDs de 960 GB à 12 Gbps \\
+            1 & Dell PE R7525 & 2x AMD EPYC 7773X à 2,2 GHz & 64 & 768 MB & 384 GB & 2x SSDs de 960 GB à 12 Gbps \\
+            \bottomrule
+        \end{tabularx}
+        \begin{tablenotes}
+            \item [1] Em cada CPU.
+            \item [2] \textit{PowerEdge}.
+        \end{tablenotes}
+    \end{threeparttable}
+\end{table}
+
+
+
+\section{Sistema operacional}
+\label{sec:sistema-operacional}
+% Descrição do sistema operacional do cluster
+
+O CDJPAS é gerenciado pelo nó principal (\textit{head}), que executa o Qlustar\footnote{\url{\URLQlustar}}, um sistema operacional (SO) baseado na distribuição de Linux Ubuntu\footnote{\url{\URLUbuntu}} e especialmente voltado a ambientes HPC. Este sistema operacional funciona criando cópias idênticas de uma imagem do Ubuntu e as distribuindo pelo nó de login e pelos nós de computação.
+
+Cada versão do Qlustar é baseada em uma versão específica do Ubuntu. Uma consequência disso é que, com o passar do tempo, pode ocorrer defasagem em alguns softwares e bibliotecas que foram instalados a partir dos repositórios oficiais do Qlustar e do Ubuntu. Por exemplo, a versão atual do Qlustar instalada no CDJPAS é a 12.0, que é baseada no Ubuntu 20.04 LTS e já se tornou obsoleta, com data para EOL\footnote{\textit{End-of-life}, ou fim do suporte.} marcada para 31 de maio de 2025. Logo, uma atualização para a versão 13.0 do Qlustar, baseada no Ubuntu 22.04 LTS, está agendada para o ano de 2025.
+
+
+
+\section{Ambiente de software}
+\label{sec:ambiente-de-software}
+% Listagem de gerenciadores de pacotes, bibliotecas e softwares científicos instalados.
+
+O CDJPAS dispõe de um ambiente diversificado de softwares para atender às necessidades computacionais dos usuários. Algumas ferramentas essenciais já estão pré-instaladas em \filename{/usr/bin/}, enquanto outras devem ser acessadas por meio do sistema de módulos Lmod\footnote{\url{\URLLmod}} (através do comando \command{module load}). Alternativamente, esses softwares com módulos Lmod também podem ser executados diretamente, sem a necessidade de carregamento explícito, bastando apenas apontar seu caminho em \filename{/apps/local/opt/}.
+
+Além disso, os usuários têm autonomia para instalar e gerenciar suas próprias aplicações em seus diretórios pessoais dentro de \filename{/home}, garantindo flexibilidade para configurações específicas. O ambiente oferece suporte a softwares especializados para as diferentes áreas da astronomia via solicitação específica. Para processamento em Python, a distribuição Miniforge\footnote{\url{\URLMiniforge}} está disponível, proporcionando um ambiente diversificado para bibliotecas científicas e análise de dados.

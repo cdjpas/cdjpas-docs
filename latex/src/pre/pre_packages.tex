@@ -1,0 +1,120 @@
+%##############################################################################
+%##############################################################################
+% LIST OF PACKAGES
+%##############################################################################
+%##############################################################################
+
+% AMS mathematical facilities
+\usepackage{amsmath}
+
+% Multilingual support for Plain TeX or LaTeX [Brazilian Portuguese]
+\usepackage[brazilian]{babel}
+
+% Publication quality tables
+\usepackage{booktabs}
+
+% Accept different input encodings [Western European characters set]
+\usepackage[utf8]{inputenc}
+
+% Cross-platform Java application to query OS information (must be loaded before datetime2 to allow showing seconds when querying time)
+\usepackage{texosquery}
+
+% Formats for dates, times and time zones
+\usepackage[useregional]{datetime2}
+
+% Standard package for selecting font encodings [Fonts with acents in the PDF]
+\usepackage[T1]{fontenc}
+
+% Subliminal refinements towards typographical perfection
+\usepackage{microtype}
+
+% Enhanced support for graphics
+\usepackage{graphicx}
+
+% Provides easy driver-independent access to several kinds of colors, tints, shades, tones, and mixes of arbitrary colors [Colors in tables]
+\usepackage[dvipsnames, svgnames, table]{xcolor}
+
+% Fonts: Times (text) and Txfonts (math)
+\usepackage{txfonts}
+
+% Flexible and complete interface to document dimensions
+\usepackage{geometry}
+
+% A package providing an interface to sectioning commands for selection from various title styles
+\usepackage{titlesec}
+
+% Alternative versions of “ragged”-type commands
+\usepackage{ragged2e}
+
+% Sophisticated bibliographies
+\usepackage[
+    backend=biber,
+    %backend=bibtex,
+    % style=numeric,
+    style=phys,
+    % style=abnt,
+    isbn=false,
+    doi=true,
+    url=false,
+    eprint=true,
+    hyperref=true,
+    giveninits=true,
+    block=none
+]{biblatex}
+
+% !!! TO DELETE IN FINAL VERSION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+% Framed environments that can split at page boundaries
+\usepackage{mdframed}
+
+% Extensive support for hypertext in LaTeX [Make hyper-references back from bibliography to page of citation]
+\usepackage[pdfusetitle]{hyperref}
+
+% To insert todos and comments in a visually appealing way.
+% Comment it in the final version.
+\usepackage[textwidth=2.5cm]{todonotes}
+
+% Include and extract SVG pictures
+\usepackage{svg}
+
+% Add picture commands (or backgrounds) to every page
+\usepackage{eso-pic}
+
+% Required for drawing custom shapes
+\usepackage{tikz}
+
+% Required for setting background images (title page)
+\usepackage{wallpaper}
+
+% Tabulars with adjustable-width columns
+\usepackage{tabularx}
+
+% Enables line wrapping (see https://stackoverflow.com/a/48507868/10029849)
+\usepackage{fvextra}
+
+% Context sensitive quotation facilities
+\usepackage{csquotes}
+
+% For better inter-paragraph spaces
+\usepackage{parskip}
+
+% For better line breaks in URLs
+\usepackage{xurl}
+
+% Flexible handling of verbatim text
+\usepackage{fancyvrb}
+
+% For fancy color boxes
+\usepackage[most]{tcolorbox}
+
+% Highlighted source code
+\usepackage[outputdir=output]{minted}
+
+% LaTeX support for the Text Companion fonts
+\usepackage{textcomp}
+
+% Tables with captions and notes all the same width
+\usepackage{threeparttable}
+
+% !!! TO DELETE IN FINAL VERSION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+% For dummy text
+\usepackage{lipsum}

@@ -1,0 +1,65 @@
+%##############################################################################
+%##############################################################################
+% MAIN DOCUMENT
+%##############################################################################
+%##############################################################################
+
+\documentclass[12pt, a4paper, extrafontsizes]{memoir}
+
+
+%##############################################################################
+%=== OTHER CODE SOURCES =======================================================
+%##############################################################################
+% List of packages
+\input{src/pre/pre_packages}
+
+% Document info
+\input{src/pre/pre_info}
+
+% Some journal definitions
+\input{src/pre/pre_journaldefs}
+
+% Useful commands
+\input{src/pre/pre_commands}
+
+% Document configuration
+\input{src/pre/pre_config}
+
+
+%##############################################################################
+%=== BEGINNING OF THE DOCUMENT ================================================
+%##############################################################################
+\begin{document}
+    \pagenumbering{roman}
+
+    \include{src/cover}
+
+    % !!! TO REMOVE IN THE FINAL VERSION !!!
+    % \listoftodos
+
+    \include{src/presentation}
+
+    \cleardoublepage
+
+    \pdfbookmark[1]{Conteúdo}{tableofcontents}
+    \tableofcontents*
+
+    \cleardoublepage
+    \pagenumbering{arabic}
+
+    \input{src/chap_introducao/chap_introducao}
+    \input{src/chap_visao-geral-do-cdjpas/chap_visao-geral-do-cdjpas}
+    \input{src/chap_acesso-ao-cluster/chap_acesso-ao-cluster}
+    \input{src/chap_uso-do-cluster/chap_uso-do-cluster}
+    \input{src/chap_gestao-de-dados/chap_gestao-de-dados}
+    \input{src/chap_software/chap_software}
+    \input{src/chap_politicas-e-normas/chap_politicas-e-normas}
+    \input{src/chap_suporte-e-recursos/chap_suporte-e-recursos}
+    \input{src/chap_solucoes-de-problemas-comuns/chap_solucoes-de-problemas-comuns}
+	\appendix
+    \input{src/app_tutoriais/app_tutoriais}
+    \input{src/app_exemplos-de-scripts/app_exemplos-de-scripts}
+    \input{src/app_contatos-uteis/app_contatos-uteis}
+    \input{src/app_glossario/app_glossario}
+    \input{src/app_referencias/app_referencias}
+\end{document}

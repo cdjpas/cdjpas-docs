@@ -1,0 +1,58 @@
+\section{Localização da biblioteca e dos dados da likelihood do Planck}
+\label{sec:planck}
+
+Até a presente data existem duas instalações da likelihood do Planck (versão 2018) no cluster CDJPAS. Uma versão foi compilada com o toolkit oneAPI 2023 da Intel (\object{ifort}, MKL, etc) e outra compilada com GFortran e OpenBLAS. Elas estão instaladas, respectivamente, em
+
+\itmz{
+    \item \filename{/apps/local/opt/planck-likelihood/code_intel};
+    \item \filename{/apps/local/opt/planck-likelihood/code_gnu-openblas}.
+}
+
+\sloppypar
+No entanto, não é necessário utilizar esses caminhos diretamente.
+Para conseguir usar a likelihood e ter acesso às bibliotecas contidas em \filename{/apps/local/opt/planck-likelihood/code_intel/plc_3.0/plc-3.1/lib/} (\filename{libclik\*.so}), basta executar um dos dois comandos abaixo, dependendo da versão que você deseja utilizar:
+
+\itmz{
+    \item \command{module load planck2018/intel2023.1.0};
+    \item \command{module load planck2018/gnu-openblas}.
+}
+
+Você também pode executar o comando \command{module avail} para ver os módulos que estão disponíveis para uso no momento.
+
+Por fim, os arquivos de dados da likelihood se encontram em
+
+\itmz{
+    \item \filename{/apps/local/opt/planck-likelihood/baseline};
+    \item \filename{/apps/local/opt/planck-likelihood/extended}.
+}
+
+No que segue abaixo, irei utilizar o toolkit oneAPI 2023 da Intel para mostrar como configurar o CLASS e o MontePython para funcionarem com a likelihood do Planck.\footnote{Esta é uma nota de rodapé.}
+
+\begin{code}[highlightlines=8-10]{python}
+    from typing import Iterator
+
+    # This is an example
+    class Math:
+        @staticmethod
+        def fib(n: int) -> Iterator[int]:
+            """Fibonacci series up to n."""
+            a, b = 0, 1
+            while a < n:
+                yield a
+                a, b = b, a + b
+
+    result = sum(Math.fib(42))
+    print(f"The answer is {result}")
+\end{code}
+
+\begin{cdjpasterminal}
+    |\prompt{cdjpas}{bsantos}[base]{\DTMcurrenttime}[main]{\textasciitilde/software}{>}| sinfo
+
+    NODELIST   STATE  CPUS(A/I/O/T)  CPU_LOAD  FREE_M  TMP_DISK
+    compute-1  mixed  112/16/0/128   25.10     262781  0
+    compute-2  down*  0/0/128/128    0.49      384157  0
+    compute-3  idle   0/128/0/128    0.28      243265  0
+    compute-4  idle   0/128/0/128    0.31      313955  0
+    compute-5  idle   0/128/0/128    0.31      287509  0
+    compute-6  idle   0/128/0/128    0.26      343442  0
+\end{cdjpasterminal}

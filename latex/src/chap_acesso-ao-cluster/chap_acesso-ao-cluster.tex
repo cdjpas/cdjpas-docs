@@ -1,0 +1,147 @@
+\chapter{Acesso ao Cluster}
+\label{chap:acesso-ao-cluster}
+
+\section{Solicitação de Acesso}
+\label{sec:solicitacao-de-acesso}
+% Procedimentos para solicitar uma conta de usuário.
+
+Para ser um usuário do cluster, você precisa atender um dos seguintes pré-requisitos:
+
+\itmz{
+    \item Ser aluno(a) do programa de pós-graduação em Astronomia do ON, ou
+      pós-doutorando na COAST, ou pesquisador membro da COAST;
+    \item Ser membro externo ao ON, mas colaborador(a) envolvido(a) em algum projeto de pesquisa da qual a COAST é participante.
+}
+
+O acesso ao cluster CDJPAS não é garantido automaticamente através da Conta de Serviços Internos (CSI) que o usuário utiliza para acessar os diversos serviços fornecidos pela DITIN (VPN, LDAP, intranet, suporte, etc.).
+Para obter acesso ao cluster, você deve solicitar a abertura de conta abrindo um chamado através do Suporte ON\footnote{\url{\URLSuporteON}.}, indicando \textbf{\cdjpasadmin} como responsável por atender o chamado.
+As seguintes informações devem ser fornecidas no chamado:
+
+\itmz{
+    \item Nome completo;
+    \item Posição acadêmica (mestrando, doutorando, pós-doc ou pesquisador);
+    \item Área ou grupo de pesquisa;
+    \item Nome do orientador ou supervisor (se você for aluno ou pós-doc);
+    \item Projeto envolvido.
+}
+
+As solicitações feitas para pessoas externas ao ON devem ser realizadas por membros da COAST e incluir a instituição da qual a pessoa faz parte.
+
+
+
+\section{Acessando o cluster}
+\label{sec:acessando-o-cluster}
+% Métodos de login (SSH, VPN, etc.) e autenticação multifatorial, se aplicável.
+
+O acesso ao cluster se dá via nó de \textit{login}, que possui o endereço \hostname{cdjpas.on.br}.
+Este endereço só pode ser acessado por quem está conectado à rede interna do ON, o que pode ser feito a partir de qualquer computador localizado dentro do campus.
+Para acessá-lo estando fora do campus, o usuário deve se conectar primeiro à rede do ON via conta VPN\footnote{Acesse \url{\URLIntranetONVPN} para solicitar um certificado VPN. Note que é necessário já possuir uma conta CSI para fazer essa solicitação.}.
+É no nó de \textit{login} que os usuários devem submeter seus jobs ao gerenciador de filas Slurm.
+Este, por sua vez, irá delegar o trabalho aos nós de computação.
+
+% Acesso a partir do Linux ou OS X
+
+
+
+\section{Se conectando com senha}
+\label{sec:se-conectando-com-senha}
+% Instruções detalhadas para acesso remoto usando diferentes sistemas operacionais (Windows, MacOS, Linux).
+
+O acesso remoto ao cluster se dá via conexão SSH ao nó de \textit{login}.
+Isto pode ser feito com o seguinte comando:
+
+\begin{terminal}
+    ssh usuario@cdjpas.on.br
+\end{terminal}
+
+\noindent onde \textverb{usuario} é o seu nome de usuário no cluster.
+Apenas sua senha será exigida após este comando.
+Se necessário, digite \command{man ssh} para obter mais informações sobre o comando \command{ssh}.
+Esse método é ideal para usuários que não precisam acessar o cluster com frequência ou que preferem uma autenticação simples.
+
+\begin{warning}
+    O usuário deve evitar o uso da opção \textverb{-X} (\command{ssh -X ...}), que habilita o encaminhamento X11 (\textit{X11 Forwarding}), uma vez que o cluster não possui ambiente gráfico instalado.
+\end{warning}
+
+
+
+\section{Se conectando com chaves SSH}
+\label{sec:se-conectando-com-chaves-ssh}
+
+Muitas vezes, digitar uma senha sempre que se deseja realizar uma conexão via SSH com algum servidor remoto pode ser um processo bem tedioso, além de expor o usuário a riscos desnecessários relacionados ao gerenciamento de senhas.
+Um método mais recomendado em conexões deste tipo é a utilização de um par de chaves SSH\footnote{Você acessar \url{\URLSSHKeys} para ver uma descrição detalhada de como criar suas chaves e utilizá-las no cluster.}, que elimina a necessidade de senha e torna a conexão mais direta e menos arriscada.
+
+
+% Criando o par de chaves
+\subsection{Passos para configurar chaves SSH}
+\label{subsec:passos-para-configurar-chaves-SSH}
+
+% Copiando as chaves para o nó de login
+\begin{enumerate}
+    \item Gere um par de chaves SSH no seu computador local (se você ainda não tiver uma):
+    \begin{terminal}
+        ssh-keygen -t ed25519 -b 4096
+    \end{terminal}
+        Siga as instruções para salvar a chave (por exemplo, em \filename{~/.ssh/id_ed25519}) e definir uma senha opcional para a chave.
+
+    \item Copie a chave pública para o CDJPAS:
+    \begin{terminal}
+        ssh-copy-id usuario@cdjpas.on.br
+    \end{terminal}
+        Insira sua senha quando solicitado. Isso adicionará sua chave pública ao arquivo \filename{~/.ssh/authorized_keys} no cluster.
+
+    \item Agora, você pode se conectar ao cluster sem precisar digitar a senha:
+    \begin{terminal}
+        ssh usuario@cdjpas.on.br
+    \end{terminal}
+\end{enumerate}
+
+\subsection{Exemplo de uso}
+\label{subsec:exemplo-de-uso}
+
+Se você gerou uma chave SSH chamada \filename{~/.ssh/id_ed25519}, pode usá-la diretamente no comando SSH:
+\begin{terminal}
+    ssh -i ~/.ssh/id_ed25519 usuario@cdjpas.on.br
+\end{terminal}
+
+
+
+\section{Se conectando através do arquivo de configuração do SSH}
+\label{sec:se-conectando-atraves-do-arquivo-de-configuracao-do-SSH}
+
+Outro método recomendado para se conectar ao cluster é o uso de um arquivo de configuração SSH para simplificar as conexões. O arquivo de configuração do SSH, localizado em \filename{~/.ssh/config}, permite definir configurações personalizadas para diferentes hosts, incluindo o CDJPAS. Esse método é especialmente útil para quem acessa múltiplos clusters ou precisa de configurações específicas.
+
+
+\subsection{Exemplo de configuração}
+\label{subsec:exemplo-de-configuracao}
+
+\begin{enumerate}
+    \item Abra ou crie o arquivo \filename{~/.ssh/config} no seu computador local:
+    \begin{terminal}
+        nano ~/.ssh/config
+    \end{terminal}
+
+    \item Adicione uma entrada para o CDJPAS:
+    \begin{code}{linuxconfig}
+        Host cdjpas
+            hostname cdjpas.on.br
+            user usuario
+            IdentityFile ~/.ssh/id_ed25519
+    \end{code}
+
+    \item Salve o arquivo e feche o editor.
+
+    \item Agora, você pode se conectar ao CDJPAS usando apenas o alias definido:
+    \begin{terminal}
+        ssh cdjpas
+    \end{terminal}
+\end{enumerate}
+
+Como vantagem, esse método torna desnecessário a digitação do nome de usuário e/ou do endereço completo toda vez que o usuário quiser se conectar ao cluster. Além disso, ele facilita o gerenciamento de múltiplas chaves SSH e configurações. Por fim, a autenticação do usuário no cluster via chaves SSH é mais segura do que a autenticação com senha, uma vez que as chaves são encriptadas e o usuário não precisa enviar sua senha via rede.
+
+\begin{warning}
+    Verifique se o arquivo \filename{~/.ssh/config} possui no mínimo permissão para leitura e escrita para o seu nome de usuário.
+    Você pode usar o comando \command{chmod 600 ~/.ssh/config} caso não tenha certeza.
+\end{warning}
+
+% Acesso a partir do Windows
